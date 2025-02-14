@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Web Crawler</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-QWTKZyjpPEjISv5WaRU9OFeRpok6YctnYmDr5pNlyT2bRjXh0JMhjY6hW+ALEwIH" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-YvpcrYf0tY3lHB60NNkmXc5s9fDVZLESaAA55NDzOxhy9GkcIdslK1eN7N6jIeHz" crossorigin="anonymous"></script>
+    <style>
+      body {
+        display: flex;
+        flex-direction: column;
+        justify-content: center;
+        align-items: center;
+        height: 100vh;
+        background-color: white;
+        font-family: Arial, sans-serif;
+        margin: 0;
+      }
+      h1 {
+        font-size: 2rem;
+        margin-bottom: 20px;
+      }
+      .search-box {
+        width: 400px;
+        padding: 10px;
+        font-size: 1rem;
+        border: 1px solid #ccc;
+        border-radius: 25px;
+        outline: none;
+        text-align: center;
+      }
+    </style>
+  </head>
+  <body>
+    <h1>Web Crawler</h1>
+    <input
+      type="text"
+      id="search"
+      class="search-box"
+      placeholder="Enter search query..."
+    />
+    <p id="receipt"></p>
+  </body>
+  <script>
+    const searchInput = document.getElementById("search");
+    if (searchInput) {
+      searchInput.addEventListener("keypress", (event) => {
+        if (event.key === "Enter") {
+          crawlUrl(event.target.value, event.target);
+        }
+      });
+    }
+
+
+    const crawlUrl = async (url, ele) => {
+      const response = await fetch("/crawl", {
+        headers: {
+          "Content-Type": "application/json",
+        },
+        method: "POST",
+        body: JSON.stringify({
+          url,
+        }),
+      });
+
+      if (response.ok) {
+        const body = await response.json();
+        const receipt = `/results?key=${escape(body.key)}`;
+        
+        // Remove the element
+        ele.remove();
+        const resultEle = document.getElementById('receipt');
+        resultEle.innerHTML = `
+            Your crawling request has been submitted. You can find your result at <a href="${receipt}">here</a>, please bookmark this link.
+        `;
+      } else {
+        alert('Something went wrong');
+        console.error(body);
+      }
+    };
+  </script>
+</html>
