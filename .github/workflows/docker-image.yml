@@ -1,4 +1,4 @@
-name: Docker Image CI
+name: Crawler Link Checker Docker
 
 on:
   push:
@@ -7,12 +7,16 @@ on:
     branches: [ "main" ]
 
 jobs:
-
   build:
-
     runs-on: ubuntu-latest
-
     steps:
     - uses: actions/checkout@v4
-    - name: Build the Docker image
-      run: docker build . --file Dockerfile --tag my-image-name:$(date +%s)
+    - name: Build Crawler Link Checker
+      env:
+          DOCKER_LOGIN: ${{ secrets.DOCKER_LOGIN }}
+          DOCKER_KEY: ${{ secrets.DOCKER_KEY }}
+      run: |
+          docker login -u DOCKER_LOGIN -p DOCKER_KEY
+          docker build -t crawler-link-checker .
+          docker tag crawler-link-checker:latest DOCKER_LOGIN/crawler-link-checker:latest
+          docker push DOCKER_LOGIN/crawler-link-checker:latest
