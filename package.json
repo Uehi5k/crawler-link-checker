@@ -25,9 +25,9 @@
     "start": "npm run start:dev",
     "start:prod": "node dist/main.js",
     "start:dev": "tsx watch src/main.ts",
-    "build": "tsc src/main.ts --outDir dist",
+    "build": "tsc",
     "postinstall": "npx crawlee install-playwright-browsers"
   },
   "author": "Chau Hoang Hieu Lam",
-  "license": "GPL-3.0-only"
+  "license": "MIT"
 }
