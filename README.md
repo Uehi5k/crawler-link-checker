@@ -4,12 +4,12 @@ This tool is to provide a convenient way for the users to check if there are any
 
 What the tool provides:
 - Given an URL, it will check
-  - **<img> tag** - looking at the **src** and **srcset** attributes for the list of URLs.
-  - **<meta> tag** - looking for **content** attribute and filter those matching the a format of an URL.
-  - **<link> tag** - looking for **href** attribute.
-  - **<script tag** - looking for **src** attribute.
-  - **<a> tag with .docx or .pdf** - specifically looking for Word doc or PDF files in the a tag.
-  - **<a> tag** - looking for **href** attribute.
+  - **img tag** - looking at the **src** and **srcset** attributes for the list of URLs.
+  - **meta tag** - looking for **content** attribute and filter those matching the a format of an URL.
+  - **link tag** - looking for **href** attribute.
+  - **script tag** - looking for **src** attribute.
+  - **a tag with .docx or .pdf** - specifically looking for Word doc or PDF files in the a tag.
+  - **a tag** - looking for **href** attribute.
 - Capability to craw a single page, or recursive crawling until all pages of the same domain have been crawled.
 - Some websites using bot protection, and prevent crawler accessing the webpage. To solve this problem, when the crawler has a failed status for one of the url, it will then be pushed to the **failed-route**, and in this route, it will use a fallback solution using [gotScraping](https://crawlee.dev/docs/examples/crawl-single-url) to check for the URL, and based on the status of the response, it will then be logged correctly. To understand more about **gotScarping**, follow this article [Got Scraping](https://crawlee.dev/docs/guides/got-scraping).
 - Save data using timestamp based method. If you scrape a website, the domain of the url will be used in combination with the timestamp using `new Date().getTime()`. A CSV and a JSON files are provided when crawler finishes.
