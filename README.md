@@ -32,10 +32,11 @@ Please find the CSV and JSON files under **examples** folder for reference.
 
 # To do list
 
-1. UI enhancement to input a URL and configurations.
-2. Dockerfile
-3. Fix production build
-4. Singleton Crawler
+1. Demo
+2. UI enhancement to input a URL and configurations.
+3. Dockerfile
+4. Fix production build
+5. Singleton Crawler
 
 # Troubleshooting
 
