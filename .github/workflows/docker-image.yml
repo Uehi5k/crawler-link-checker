@@ -24,4 +24,4 @@ jobs:
       run: |
           docker build -t crawler-link-checker .
           docker tag crawler-link-checker:latest DOCKER_LOGIN/crawler-link-checker:latest
-          docker push DOCKER_LOGIN/crawler-link-checker:latest
+          docker push ${{ secrets.DOCKER_LOGIN }}/crawler-link-checker:latest
