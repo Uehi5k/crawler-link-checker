@@ -34,9 +34,9 @@
 
     // Set donwload link for the result
     const downloadLink = `/crawl/results/download/${key}`;
-    const downloadLinkEle = document.getElementById('download-link');
-    downloadLinkEle.setAttribute('href', downloadLink);
-    downloadLinkEle.setAttribute('download', `${key}.csv`)
+    const downloadLinkEle = document.getElementById("download-link");
+    downloadLinkEle.setAttribute("href", downloadLink);
+    downloadLinkEle.setAttribute("download", `${key}.csv`);
 
     // Query results every 5 seconds
     const interval = setInterval(async () => {
@@ -48,12 +48,11 @@
         method: "GET",
       });
 
+      const body = await response.json();
       if (response.ok) {
-        const body = await response.json();
         console.log(body);
       } else {
-        alert("Something went wrong");
-        console.error(body);
+        alert(body.error);
       }
     };
   </script>

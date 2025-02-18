@@ -1,13 +1,21 @@
-import { Elysia, file, t } from "elysia";
-import { crawlUrl, getCrawlInfo } from "../services/crawl.service.js";
+import { Elysia, error, file, t } from "elysia";
+import { crawlUrl, crawler, getCrawlInfo } from "../services/crawl.service.js";
 import { getResults } from "../services/results.service.js";
 
 class Crawler {
   // TODO - to improve this and have another route to request for progress
   crawl(url: string) {
     const { domain, datasetStorage } = getCrawlInfo(url);
+    if (domain === null) {
+      return error(400, { error: "URL is not correct, please try a different domain!" });
+    }
+
+    if (crawler !== undefined) {
+      return error(503, { error: "Crawler is currently performing for a user, please try again later!" });
+    }
+
     crawlUrl(url, domain, datasetStorage, false);
-    return datasetStorage;
+    return { key: datasetStorage };
   }
 
   getResults(key: string) {
@@ -20,7 +28,7 @@ export const crawl = new Elysia({ prefix: "/crawl" })
   .post(
     "/",
     ({ crawler, body: { url } }) => {
-      return { key: crawler.crawl(url) };
+      return crawler.crawl(url);
     },
     {
       body: t.Object({

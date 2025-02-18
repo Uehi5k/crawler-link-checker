@@ -10,12 +10,7 @@ import {
   KeyValueStore,
 } from "crawlee";
 import { Page } from "playwright";
-import {
-  extractImgSrc,
-  extractMetaContent,
-  extractScriptSrcs,
-  extractStyleSheetLinks,
-} from "../helpers/extraction.js";
+import { extractImgSrc, extractMetaContent, extractScriptSrcs, extractStyleSheetLinks } from "../helpers/extraction.js";
 import { createLogObject, getDomainFromURL } from "../helpers/utils.js";
 import { BatchAddRequestsResult } from "@crawlee/types";
 import { Direction, LinkType, PageLog } from "../types/page.model.js";
@@ -27,6 +22,9 @@ import { failedRouter } from "../routes/failed-routes.js";
 import { chromium } from "playwright-extra";
 import stealthPlugin from "puppeteer-extra-plugin-stealth";
 chromium.use(stealthPlugin());
+
+// Singleton Crawler
+export let crawler: PlaywrightCrawler | undefined;
 
 /**
  * Prepare log data and return values
@@ -55,14 +53,7 @@ export const prepareLogData = async (
   const recursiveCrawl = request.userData.recursiveCrawl ?? true;
   const linkType = request.userData.linkType ?? LinkType.Link;
 
-  let logObject = await createLogObject(
-    request,
-    response,
-    page,
-    log,
-    linkType,
-    firstSourceUrl
-  );
+  let logObject = await createLogObject(request, response, page, log, linkType, firstSourceUrl);
 
   // Drop domain crawl data, to prepare for the new crawl
   const currentPageDomain = getDomainFromURL(logObject.url);
@@ -100,22 +91,17 @@ export const crawlPageAhrefSrc = async (
   response: Dictionary | undefined,
   page: Page,
   log: Log,
-  pushData: (
-    data: Readonly<Parameters<Dataset["pushData"]>[0]>,
-    datasetIdOrName?: string
-  ) => Promise<void>,
+  pushData: (data: Readonly<Parameters<Dataset["pushData"]>[0]>, datasetIdOrName?: string) => Promise<void>,
   enqueueLinks: (
-    options?: Readonly<Omit<EnqueueLinksOptions, "requestQueue">> &
-      Pick<EnqueueLinksOptions, "requestQueue">
+    options?: Readonly<Omit<EnqueueLinksOptions, "requestQueue">> & Pick<EnqueueLinksOptions, "requestQueue">
   ) => Promise<BatchAddRequestsResult>
 ) => {
-  const {
-    datasetStorage,
-    firstSourceDomain,
-    recursiveCrawl,
-    sameDomain,
-    logObject,
-  } = await prepareLogData(request, response, page, log);
+  const { datasetStorage, firstSourceDomain, recursiveCrawl, sameDomain, logObject } = await prepareLogData(
+    request,
+    response,
+    page,
+    log
+  );
 
   await pushData(logObject, datasetStorage);
 
@@ -236,10 +222,9 @@ export const crawlUrl = async (
       linkType: LinkType.StartUrl,
     },
   };
-  console.log(request);
 
   if (domain !== null) {
-    const crawler = new PlaywrightCrawler({
+    crawler = new PlaywrightCrawler({
       requestHandler: router,
       failedRequestHandler: failedRouter,
       minConcurrency: 10,
@@ -261,6 +246,8 @@ export const crawlUrl = async (
     });
 
     console.log("Crawler finished.");
+    // Remove crawler
+    crawler = undefined;
   } else {
     console.log("Domain is not valid, please enter a correct URL format");
   }

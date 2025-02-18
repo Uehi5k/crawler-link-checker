@@ -36,7 +36,6 @@ Please find the CSV and JSON files under **examples** folder for reference.
 2. UI enhancement to input a URL and configurations.
 3. Dockerfile
 4. Fix production build
-5. Singleton Crawler
 
 # Troubleshooting
 
