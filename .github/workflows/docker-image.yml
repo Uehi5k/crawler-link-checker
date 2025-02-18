@@ -30,4 +30,4 @@ jobs:
         uses: docker/build-push-action@v6
         with:
           push: true
-          tags: ${{ secrets.DOCKER_LOGIN }}/crawler-link-checker:latest
+          tags: uehi5k/crawler-link-checker:latest
