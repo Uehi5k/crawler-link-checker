@@ -14,6 +14,8 @@ RUN npm install --include=dev --audit=false
 # in the base image.
 COPY --chown=myuser . ./
 
+EXPOSE 3000
+
 # Run this for now for the demo
 CMD ./start_xvfb_and_run_cmd.sh && npm run start --silent
 
