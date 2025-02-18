@@ -11,20 +11,29 @@ failedRouter.addDefaultHandler(async ({ request, response, page, log, pushData }
   /**
    * Use gotScraping to call the resouece, sometimes enqueueLinks can be wrong
    * Current Http headers to be included for using gotScraping
+   *
+   * gotScraping can fail, which we capture in
    */
-  const scrapingResponse = await gotScraping({
-    url: request.url,
-    headers: {
-      Referer: currentPageDomain ?? "",
-    },
-  });
+  try {
+    const scrapingResponse = await gotScraping(request.url, {
+      timeout: {
+        request: 5000,
+      },
+      headers: {
+        Referer: currentPageDomain ?? "",
+      },
+    });
 
-  // If status code shows success, logs this
-  if (scrapingResponse.statusCode >= 200 && scrapingResponse.statusCode < 300) {
-    logObject.contentType = scrapingResponse.headers["content-type"] ?? "Unknown";
-    logObject.brokenCheck = LinkStatus.Ok;
-    logObject.status = scrapingResponse.statusCode;
-    logObject.title = request.url;
+    // If status code shows success, logs this
+    if (scrapingResponse.statusCode >= 200 && scrapingResponse.statusCode < 300) {
+      logObject.contentType = scrapingResponse.headers["content-type"] ?? "Unknown";
+      logObject.brokenCheck = LinkStatus.Ok;
+      logObject.status = scrapingResponse.statusCode;
+      logObject.title = request.url;
+    }
+  } catch {
+    // To add any error if needed
+    log.error(`gotScraping error - ${request.url}`);
   }
 
   // If the first page throws error, likely to have no datasetStorage data

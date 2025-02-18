@@ -66,7 +66,7 @@ Request ID: 4kVsbQTqEZydcdRdQUZXr4IRUl800kXGryj8XJZduvHQ3C_jx9DaBQ==
 </BODY></HTML>
 ```
 
-**Timeout issue stops crawler - rare**
+**Timeout issue stops crawler - try catch gotScraping in failed-route**
 ```
 node:internal/process/esm_loader:40
       internalBinding('errors').triggerUncaughtException(
