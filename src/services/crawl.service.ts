@@ -248,6 +248,10 @@ export const crawlUrl = async (
       maxConcurrency: 15,
       maxRequestsPerMinute: 200,
       maxRequestRetries: 0, // Just to ignore 403 issue for now
+      sessionPoolOptions: {
+        persistStateKeyValueStoreId: datasetStorage,
+      },
+      useSessionPool: true,
       launchContext: {
         launcher: chromium,
       },
@@ -258,10 +262,15 @@ export const crawlUrl = async (
     // Export crawl info to csv
     try {
       const dataset = await Dataset.open(datasetStorage);
-      await store.setValue("OUTPUT", (await dataset.getData()).items);
-      await dataset.exportToCSV(datasetStorage, {
-        toKVS: datasetStorage,
-      });
+      const data = await dataset.getData();
+      if (data.items.length > 0) {
+        await store.setValue("OUTPUT", data.items);
+        await dataset.exportToCSV(datasetStorage, {
+          toKVS: datasetStorage,
+        });
+      } else {
+        console.log(`No crawl requests for dataset ${datasetStorage}.`);
+      }
     } catch (e) {
       console.log(e);
       console.log(`Error exporting ${datasetStorage}.csv file!`);
