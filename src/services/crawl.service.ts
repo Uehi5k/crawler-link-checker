@@ -8,6 +8,7 @@ import {
   PlaywrightCrawler,
   RequestOptions,
   KeyValueStore,
+  RequestQueue,
 } from "crawlee";
 import { Page } from "playwright";
 import {
@@ -21,6 +22,7 @@ import { BatchAddRequestsResult } from "@crawlee/types";
 import { Direction, LinkType, PageLog } from "../types/page.model.js";
 import { router } from "../routes/routes.js";
 import { failedRouter } from "../routes/failed-routes.js";
+import { purgeDefaultStorages } from "crawlee";
 
 // For playwright-extra you will need to import the browser type itself that you want to use!
 // By default, PlaywrightCrawler uses chromium, but you can also use firefox or webkit.
@@ -241,6 +243,10 @@ export const crawlUrl = async (
   };
 
   if (domain !== null) {
+    // Purge the request queue folder before crawling
+    const requestQueue = await RequestQueue.open();
+    await requestQueue.drop();
+
     crawler = new PlaywrightCrawler({
       requestHandler: router,
       failedRequestHandler: failedRouter,
