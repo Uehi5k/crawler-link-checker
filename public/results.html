@@ -23,7 +23,7 @@
       <div class="row">
         <div class="col-6">
           <h2>Number of URLs</h2>
-          <a id="download-link" href="#">Donwload CSV</a>
+          <button class="btn btn-primary" onclick="downloadFile()">Donwload CSV</button>
         </div>
       </div>
     </div>
@@ -33,10 +33,23 @@
     const key = urlParams.get("key");
 
     // Set donwload link for the result
-    const downloadLink = `/crawl/results/download/${key}`;
-    const downloadLinkEle = document.getElementById("download-link");
-    downloadLinkEle.setAttribute("href", downloadLink);
-    downloadLinkEle.setAttribute("download", `${key}.csv`);
+    const downloadFile = async () => {
+      const response = await fetch(`/crawl/results/download/${key}`, {
+        method: "GET",
+      });
+      if (response.ok) {
+        const blob = await response.blob();
+        const objectUrl = URL.createObjectURL(blob);
+        const link = document.createElement('a');
+        link.href = objectUrl;
+        link.download = `${key}.csv`;
+        link.click();
+        URL.revokeObjectURL(objectUrl);
+      } else {
+        const body = await response.json();
+        alert(body.error);
+      }
+    }
 
     // Query results every 5 seconds
     const interval = setInterval(async () => {
