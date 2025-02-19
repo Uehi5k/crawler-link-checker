@@ -22,7 +22,6 @@ import { BatchAddRequestsResult } from "@crawlee/types";
 import { Direction, LinkType, PageLog } from "../types/page.model.js";
 import { router } from "../routes/routes.js";
 import { failedRouter } from "../routes/failed-routes.js";
-import { purgeDefaultStorages } from "crawlee";
 
 // For playwright-extra you will need to import the browser type itself that you want to use!
 // By default, PlaywrightCrawler uses chromium, but you can also use firefox or webkit.
