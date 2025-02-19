@@ -9,6 +9,7 @@ import {
   RequestOptions,
   KeyValueStore,
   RequestQueue,
+  ProxyConfiguration,
 } from "crawlee";
 import { Page } from "playwright";
 import {
@@ -219,12 +220,14 @@ export const getCrawlInfo = (startUrl: string) => {
  * @param startUrl (string) - start url to be crawled
  * @param domain (string | null) - domain
  * @param datasetStorage (string) - storage name
+ * @param proxyConfiguration (ProxyConfiguration | undefined)
  * @param recursiveCrawl (boolean) - recursively crawling enabled or not, default to false
  */
 export const crawlUrl = async (
   startUrl: string,
   domain: string | null,
   datasetStorage: string,
+  proxyConfiguration: ProxyConfiguration | undefined,
   recursiveCrawl = false
 ) => {
   const store = await KeyValueStore.open(datasetStorage);
@@ -247,6 +250,7 @@ export const crawlUrl = async (
     await requestQueue.drop();
 
     crawler = new PlaywrightCrawler({
+      proxyConfiguration,
       requestHandler: router,
       failedRequestHandler: failedRouter,
       minConcurrency: 10,

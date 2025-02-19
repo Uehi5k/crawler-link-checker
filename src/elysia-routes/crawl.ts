@@ -19,7 +19,7 @@ class Crawler {
       });
     }
 
-    crawlUrl(url, domain, datasetStorage, false);
+    crawlUrl(url, domain, datasetStorage, undefined, false);
     return { key: datasetStorage };
   }
 
