@@ -39,7 +39,7 @@ Please find the CSV and JSON files under **examples** folder for reference.
 ## To do list
 
 1. UI enhancement to input a URL and configurations.
-2. Fix production build and build a new Dockerfile.
+2. Unit Tests
 
 ## Troubleshooting
 
