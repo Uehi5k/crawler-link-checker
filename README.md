@@ -14,29 +14,34 @@ What the tool provides:
 - Some websites using bot protection, and prevent crawler accessing the webpage. To solve this problem, when the crawler has a failed status for one of the url, it will then be pushed to the **failed-route**, and in this route, it will use a fallback solution using [gotScraping](https://crawlee.dev/docs/examples/crawl-single-url) to check for the URL, and based on the status of the response, it will then be logged correctly. To understand more about **gotScarping**, follow this article [Got Scraping](https://crawlee.dev/docs/guides/got-scraping).
 - Save data using timestamp based method. If you scrape a website, the domain of the url will be used in combination with the timestamp using `new Date().getTime()`. A CSV and a JSON files are provided when crawler finishes.
 - Simple UI to crawl a single page, howeve you can choose to opt-in the recursive option to crawl all links within the same domain.
+- Proxy setup if required.
 
-The tech stack includes:
+## UI Demo
+
+You can view the demo [here](https://link-checker.uehi.com.au/). For stability purpose, I only run one crawler with recursive crawl turned off and if it's already running, you might need to wait for it to finish before submitting your request. Thanks for understanding.
+
+## Tech Stack
+
 - [Crawlee](https://crawlee.dev/) - PlaywrightCrawler is used to crawl.
 - [ElysiaJS](https://elysiajs.com/) - Simple UI and endpoints for calling a crawler, mostly for demonstration purposes.
 
-# Pre-requisite
+## Pre-requisite
 
 Node version 20 or above. Version used to build this tool - **20.11.1**.
 
-# Run the application
+## Run the application
 
 Run `npm install` and then `npm run start`.
 
-# Data examples
+## Data examples
 Please find the CSV and JSON files under **examples** folder for reference.
 
-# To do list
+## To do list
 
 1. UI enhancement to input a URL and configurations.
 2. Fix production build and build a new Dockerfile.
-3. Improve Demo stability.
 
-# Troubleshooting
+## Troubleshooting
 
 Some of the errors I have encountered when crawling website
 
